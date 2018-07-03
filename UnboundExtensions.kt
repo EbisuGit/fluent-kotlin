@@ -24,3 +24,17 @@ fun <T> MutableCollection<T>.overwrite(newCollection: Collection<T>) {
 fun TextView.clear() {
     text = ""
 }
+
+inline fun <T, reified R> T?.argIfPresent(func: (T) -> R): R? {
+    if(this == null) {
+        return null
+    }
+    return func(this)
+}
+
+inline fun <T, reified O, reified R> T?.argIfPresent(obj: O, func: O.(T) -> R): R? {
+    if(this == null) {
+        return null
+    }
+    return func(obj, this@argIfPresent)
+}
