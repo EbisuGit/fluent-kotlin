@@ -25,16 +25,35 @@ fun TextView.clear() {
     text = ""
 }
 
-inline fun <T, reified R> T?.argIfPresent(func: (T) -> R): R? {
+fun <T, R> T?.runIfPresent(func: (T) -> R): R? {
     if(this == null) {
         return null
     }
     return func(this)
 }
 
-inline fun <T, reified O, reified R> T?.argIfPresent(obj: O, func: O.(T) -> R): R? {
+fun <T, O, R> T?.runIfPresent(obj: O, func: O.(T) -> R): R? {
     if(this == null) {
         return null
     }
-    return func(obj, this@argIfPresent)
+    return func(obj, this@runIfPresent)
 }
+
+fun <T, R> T?.runAsyncIfPresent(func: (T) -> R) {
+    if(this == null) {
+        return
+    }
+    AsyncTask.execute {
+        func(this)
+    }
+}
+
+fun <T, O, R> T?.runAsyncIfPresent(obj: O, func: O.(T) -> R) {
+    if(this == null) {
+        return
+    }
+    AsyncTask.execute {
+        func(obj, this@runAsyncIfPresent)
+    }
+}
+
